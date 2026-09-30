@@ -60,7 +60,39 @@ class Cli:
                     if (len(parts) == 4 and parts[2] == "--by"):
                         criterion = parts[3]
                     self.player.list_library(criterion)
+                    
+            elif command == "playlist":
+                if len(parts) < 2:
+                    print("Comando incompleto. Use playlist <new | add | remove | show>")
+                    return True
                 
+                subcommand = parts[1]
+                if subcommand == "new":
+                    if len(parts) == 2:
+                        print("O nome da playlist não foi informado.")
+                    else:
+                        nome = " ".join(parts[2:])
+                        self.player.new_playlist(nome)
+                        
+                elif subcommand == "add":
+                    if len(parts) == 2:   
+                        print("O id da faixa a ser adicionada não foi informado.")
+                    elif not parts[2].isdigit():
+                        print("O id da faixa precisa ser um número inteiro.")
+                    else:
+                        self.player.playlist_add(int(parts[2]))
+                        
+                elif subcommand == "remove":
+                    if len(parts) == 2:   
+                        print("O id da faixa a ser removida não foi informado.")
+                    elif not parts[2].isdigit():
+                        print("O id da faixa precisa ser um número inteiro.")
+                    else:
+                        self.player.playlist_remove(int(parts[2]))
+                
+                elif subcommand == "show":
+                    self.player.show_playlist()
+                    
             return True
             
         except ValueError as e:

@@ -66,6 +66,10 @@ class MediaPlayer:
             print(f"Erro: Não foi encontrada faixa com id {track_id}")
             return
         
+        if not self.playlist:
+            print("Antes de adicionar uma faixa, crie a playlist.")
+            return
+        
         track = self.library[track_id]
         self.playlist.add(track)
         
@@ -73,6 +77,10 @@ class MediaPlayer:
     def playlist_remove(self, pos):
         if pos >= len(self.playlist):
             print("A posição indicada extrapola o tamanho da playlist.")
+            return
+        
+        if not self.playlist:
+            print("Antes de adicionar uma faixa, crie a playlist.")
             return
         
         self.playlist.remove_at(pos)

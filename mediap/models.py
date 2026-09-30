@@ -1,11 +1,11 @@
 from datetime import datetime
 
 class Track:
-    def __init__(self, id: int, titulo: str, artista: str, duracao: int, rating: int, data_adicao: str | datetime):
+    def __init__(self, id: int, title: str, artist: str, duration: int, rating: int, data_adicao: str | datetime):
         self.id = id
-        self.titulo = titulo
-        self.artista = artista
-        self.duracao = duracao
+        self.title = title
+        self.artist = artist
+        self.duration = duration
         self.rating = rating
         self.data_adicao = data_adicao
         
@@ -18,28 +18,28 @@ class Track:
         self._id = id
         
     @property
-    def titulo(self):
-        return self._titulo
+    def title(self):
+        return self._title
     
-    @titulo.setter
-    def titulo(self, titulo):
-        self._titulo = titulo
+    @title.setter
+    def title(self, title):
+        self._title = title
         
     @property
-    def artista(self):
-        return self._artista
+    def artist(self):
+        return self._artist
     
-    @artista.setter
-    def artista(self, artista):
-        self._artista = artista
+    @artist.setter
+    def artist(self, artist):
+        self._artist = artist
         
     @property
-    def duracao(self):
-        return self._duracao
+    def duration(self):
+        return self._duration
     
-    @duracao.setter
-    def duracao(self, duracao):
-        self._duracao = duracao
+    @duration.setter
+    def duration(self, duration):
+        self._duration = duration
         
     @property
     def rating(self):
@@ -61,15 +61,15 @@ class Track:
         self._data_adicao = data_adicao
         
     def para_dicionario(self):
-        return {"id": self.id, "titulo": self.titulo, "artista": self.artista, "duracao": self.duracao, "rating": self.rating, "data_adicao": self.data_adicao}
+        return {"id": self.id, "title": self.title, "artist": self.artist, "duration": self.duration, "rating": self.rating, "data_adicao": self.data_adicao}
     
     @classmethod
     def de_dicionario(classe, dados):
         return classe(
             id = dados['id'],
-            titulo = dados['titulo'],
-            artista = dados['artista'],
-            duracao = dados['duracao'],
+            title = dados['title'],
+            artist = dados['artist'],
+            duration = dados['duration'],
             rating = dados['rating'],
             data_adicao = dados['data_adicao']
         )

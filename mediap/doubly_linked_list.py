@@ -43,7 +43,7 @@ class DoublyLinkedList:
     def __len__(self):
         return self._length
     
-    def append(self, elem):
+    def add(self, elem):
        
         last_node = self._trailer.prev
             

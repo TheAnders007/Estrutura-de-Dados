@@ -66,7 +66,7 @@ class MediaPlayer:
             print(f"Erro: Não foi encontrada faixa com id {track_id}")
             return
         
-        if not self.playlist:
+        if self.playlist is None:
             print("Antes de adicionar uma faixa, crie a playlist.")
             return
         
@@ -79,7 +79,7 @@ class MediaPlayer:
             print("A posição indicada extrapola o tamanho da playlist.")
             return
         
-        if not self.playlist:
+        if self.playlist is None:
             print("Antes de adicionar uma faixa, crie a playlist.")
             return
         
@@ -96,7 +96,7 @@ class MediaPlayer:
             print(f"{cursor_symbol}{index}. {track.title} - {track.artist} ({track.duration})")
         
     def play(self):
-        if (len(self.playlist)) == 0:
+        if not self.playlist or (len(self.playlist)) == 0:
             print("A playlist está vazia.")
             return
         
@@ -180,7 +180,7 @@ class MediaPlayer:
             return
         
         for index, item in enumerate(self.history, start=1):
-            print(f"{index}. {item.track.title} - {item.track.artist} ({item.timestamp})")
+            print(f"{index}. {item["track"].title} - {item["track"].artist} ({item["timestamp"]})")
             
     def smart_shuffle(self, n: int):
         if not self.library:
@@ -191,7 +191,31 @@ class MediaPlayer:
             print("O número de tracks deve ser maior que 0.")
             return
         
-        ...
+        recents_tracks = []
+        for item in self.history:
+            recents_tracks.append(item["track"].id)
+
+            if (len(recents_tracks) == 5):
+                break
+            
+        smart_queue = PriorityQueue()
+        for track_id, track in self.library.items():
+            penalty = 0
+            if track_id in recents_tracks:
+                penalty = 5 - recents_tracks.index(track_id)
+                
+            priority_key = -10 * track.rating + penalty
+            smart_queue.put((priority_key, track_id, track))
+            
+        self.new_playlist("Smart Shuffle")
+        
+        count = 0
+        while not smart_queue.empty() and count < n:
+            track_id = smart_queue.get()[1]
+            self.playlist_add(track_id)
+            count += 1
+            
+        print(f"Smart Shuffle foi criado com {count} faixas na playlist.")
         
     def save(self, filepath):
         playlist_ids = []

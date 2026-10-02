@@ -93,6 +93,49 @@ class Cli:
                 elif subcommand == "show":
                     self.player.show_playlist()
                     
+            elif command == "play":
+                self.player.play()
+                
+            elif command == "next":
+                self.player.next()
+                
+            elif command == "prev":
+                self.player.prev()
+                
+            elif command == "enqueue":
+                if len(parts) == 1 or not parts[1].isdigit():
+                    print("É preciso adicionar o id da faixa que será adicionada à fila up next.")
+                else:
+                    self.player.enqueue(int(parts[1]))
+            
+            elif command == "queue":
+                if len(parts) == 2 and parts[1] == 'show':
+                    self.player.show_queue
+                else:
+                    print("Comando errado/incompleto. Utilize 'queue show'.")
+                    
+            elif command == "history":
+                self.player.show_history()
+                
+            elif command == "smart-shuffle":
+                if len(parts) == 1 or not parts[1].isdigit():
+                    print("Comando errado/incompleto. Utilize 'smart-shuffle <n>'.")
+                else:
+                    self.player.smart_shuffle(int(parts[1]))
+                
+                
+            elif command == "save":
+                if len(parts) == 1:
+                    print("Comando incompleto. Utilize 'save <arquivo>'.")
+                else:
+                    self.player.save(parts[1])
+                    
+            elif command == "load":
+                if len(parts) == 1:
+                    print("Comando incompleto. Utilize 'load <arquivo>'.")
+                else:
+                    self.player.load(parts[1])
+                    
             return True
             
         except ValueError as e:

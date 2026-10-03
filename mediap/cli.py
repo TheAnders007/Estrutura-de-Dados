@@ -1,4 +1,4 @@
-from player import MediaPlayer
+from .player import MediaPlayer
 import shlex
 
 class Cli:
@@ -52,7 +52,7 @@ class Cli:
                 subcommand = parts[1]
                 if subcommand == "load":
                     if len(parts) == 2:
-                        print("Infore o arquivo que deseje que seja carregado.")
+                        print("Informe o arquivo que deseje que seja carregado.")
                     else:
                         self.player.load_library(parts[2])
                 elif subcommand == "list":

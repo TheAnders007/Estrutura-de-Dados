@@ -1,17 +1,25 @@
 import json
 from datetime import datetime
-from models import Track
-from doubly_linked_list import DoublyLinkedList
+from .models import Track
+from .doubly_linked_list import DoublyLinkedList
 from collections import deque
 from queue import PriorityQueue
 
+
+def convert_track_duration(duration: int):
+    minutes = duration / 60
+    seconds = duration % 60
+    
+    return f"{minutes}:{seconds}"
+    
 class MediaPlayer:
     class Playlist(DoublyLinkedList):
         def __init__(self, name):
             super().__init__()
             self.name = name
-        
+    
     def __init__(self):
+        self.current_track = None
         self.library = {}
         self.playlist = None
         self.up_next = deque()
@@ -50,8 +58,7 @@ class MediaPlayer:
             tracks.sort(key=lambda track:track.id)
             
         for count, track in enumerate(tracks, start=1):
-            print(f"{count}. {track.title} - {track.artist} ({track.duration})")
-           
+            print(f"{count}. {track.title} - {track.artist} ({convert_track_duration(track.duration)})") 
             
     def new_playlist(self, playlist_name):
         if not playlist_name.strip():
@@ -59,8 +66,7 @@ class MediaPlayer:
         
         self.playlist = self.Playlist(playlist_name)
         print(f"Playlist '{self.playlist.name}' criada.")
-        
-        
+               
     def playlist_add(self, track_id):
         if not track_id in self.library:
             print(f"Erro: Não foi encontrada faixa com id {track_id}")
@@ -73,17 +79,17 @@ class MediaPlayer:
         track = self.library[track_id]
         self.playlist.add(track)
         
-        
     def playlist_remove(self, pos):
+        if self.playlist is None:
+            print("Antes de remover uma faixa, crie a playlist.")
+            return
+        
         if pos >= len(self.playlist):
             print("A posição indicada extrapola o tamanho da playlist.")
             return
         
-        if self.playlist is None:
-            print("Antes de adicionar uma faixa, crie a playlist.")
-            return
-        
         self.playlist.remove_at(pos)
+        self.current_track = self.playlist.current()
         
     def show_playlist(self):
         if not self.playlist or len(self.playlist) == 0:
@@ -93,7 +99,13 @@ class MediaPlayer:
         current_track = self.playlist.current()
         for index, track in enumerate(self.playlist, start=1):
             cursor_symbol = "> " if current_track == track else "  "
-            print(f"{cursor_symbol}{index}. {track.title} - {track.artist} ({track.duration})")
+            print(f"{cursor_symbol}{index}. {track.title} - {track.artist} ({convert_track_duration(track.duration)})")
+        
+    def history_add(self, current_track):
+        self.history.appendleft({
+            'track': current_track,
+            'timestamp': datetime.now().strftime("%H:%M:%S")
+        })
         
     def play(self):
         if not self.playlist or (len(self.playlist)) == 0:
@@ -102,25 +114,20 @@ class MediaPlayer:
         
         current_track = self.playlist.current()
         if current_track:
-            print(f">>> Tocando: \"{current_track.title}\" - {current_track.artist} ({current_track.duration})")
+            self.current_track = current_track
             
-            timestamp = datetime.now().strftime("%H:%M:%S")
+            print(f">>> Tocando: \"{current_track.title}\" - {current_track.artist} ({convert_track_duration(current_track.duration)})")
             
-            self.history.appendleft({
-                'track': current_track,
-                'timestamp': timestamp
-            })
+            self.history_add(current_track)
             
     def next(self):
         if len(self.up_next) > 0:
             current_track = self.up_next.popleft()
-            print(f">>> Tocando: \"{current_track.title}\" - {current_track.artist} ({current_track.duration})")
+            self.current_track = current_track
             
-            timestamp = datetime.now().strftime("%H:%M:%S")
-            self.history.appendleft({
-                'track': current_track,
-                'timestamp': timestamp
-            })
+            print(f">>> Tocando: \"{current_track.title}\" - {current_track.artist} ({convert_track_duration(current_track.duration)})")
+            
+            self.history_add(current_track)
             return
         
         if not self.playlist or len(self.playlist) == 0:
@@ -129,12 +136,9 @@ class MediaPlayer:
         
         current_track = self.playlist.play_next()
         if current_track:
-            print(f">>> Tocando: \"{current_track.title}\" - {current_track.artist} ({current_track.duration})")
-            timestamp = datetime.now().strftime("%H:%M:%S")
-            self.history.appendleft({
-                'track': current_track,
-                'timestamp': timestamp
-            })
+            self.current_track = current_track
+            print(f">>> Tocando: \"{current_track.title}\" - {current_track.artist} ({convert_track_duration(current_track.duration)})")
+            self.history_add(current_track)
         else:
             print("A playlist já chegou ao seu fim.")
     
@@ -146,12 +150,10 @@ class MediaPlayer:
         
         current_track = self.playlist.play_prev()
         if current_track:
-            print(f">>> Tocando: \"{current_track.title}\" - {current_track.artist} ({current_track.duration})")
+            self.current_track = current_track
+            print(f">>> Tocando: \"{current_track.title}\" - {current_track.artist} ({convert_track_duration(current_track.duration)})")
             timestamp = datetime.now().strftime("%H:%M:%S")
-            self.history.appendleft({
-                'track': current_track,
-                'timestamp': timestamp
-            })
+            self.history_add(current_track)
         else:
             print("A playlist está no seu início. Não há faixas antigas.")
         
@@ -171,7 +173,7 @@ class MediaPlayer:
             return
         
         for index, track in enumerate(self.up_next, start=1):
-            print(f"{index}. {track.title} - {track.artist} ({track.duration})")
+            print(f"{index}. {track.title} - {track.artist} ({convert_track_duration(track.duration)})")
     
             
     def show_history(self):

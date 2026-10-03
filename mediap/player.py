@@ -1,3 +1,4 @@
+import os
 import json
 from datetime import datetime
 from .models import Track
@@ -5,12 +6,11 @@ from .doubly_linked_list import DoublyLinkedList
 from collections import deque
 from queue import PriorityQueue
 
-
 def convert_track_duration(duration: int):
-    minutes = duration / 60
+    minutes = duration // 60
     seconds = duration % 60
     
-    return f"{minutes}:{seconds}"
+    return f"{minutes:02d}:{seconds:02d}"
     
 class MediaPlayer:
     class Playlist(DoublyLinkedList):
@@ -26,8 +26,11 @@ class MediaPlayer:
         self.history = deque(maxlen=20)
         
     def load_library(self, filepath):
+        
+        final_filepath = filepath if (os.path.exists(filepath)) else f"mediap/{filepath}"
+            
         try:
-            with open(filepath, 'r', encoding='utf-8') as file:
+            with open(f"{final_filepath}", 'r', encoding='utf-8') as file:
                 data = json.load(file)
                 self.library.clear()
                 
@@ -58,7 +61,7 @@ class MediaPlayer:
             tracks.sort(key=lambda track:track.id)
             
         for count, track in enumerate(tracks, start=1):
-            print(f"{count}. {track.title} - {track.artist} ({convert_track_duration(track.duration)})") 
+            print(f"{count}. [{track.id}] {track.title} - {track.artist} ({convert_track_duration(track.duration)})") 
             
     def new_playlist(self, playlist_name):
         if not playlist_name.strip():
@@ -84,11 +87,15 @@ class MediaPlayer:
             print("Antes de remover uma faixa, crie a playlist.")
             return
         
-        if pos >= len(self.playlist):
+        if pos > len(self.playlist):
             print("A posição indicada extrapola o tamanho da playlist.")
             return
         
-        self.playlist.remove_at(pos)
+        if pos <= 0:
+            print("A posição mínima começa a partir de '1'.")
+            return
+        
+        self.playlist.remove_at(pos - 1)
         self.current_track = self.playlist.current()
         
     def show_playlist(self):
@@ -152,7 +159,6 @@ class MediaPlayer:
         if current_track:
             self.current_track = current_track
             print(f">>> Tocando: \"{current_track.title}\" - {current_track.artist} ({convert_track_duration(current_track.duration)})")
-            timestamp = datetime.now().strftime("%H:%M:%S")
             self.history_add(current_track)
         else:
             print("A playlist está no seu início. Não há faixas antigas.")
@@ -182,7 +188,7 @@ class MediaPlayer:
             return
         
         for index, item in enumerate(self.history, start=1):
-            print(f"{index}. {item["track"].title} - {item["track"].artist} ({item["timestamp"]})")
+            print(f"{index}. {item['track'].title} - {item['track'].artist} ({item['timestamp']})")
             
     def smart_shuffle(self, n: int):
         if not self.library:
@@ -246,7 +252,7 @@ class MediaPlayer:
         try:
             with open(filepath, 'w', encoding='utf-8') as file:
                 json.dump(data, file, indent=4, ensure_ascii=False)
-            print(f"Estado salvo com sucesso em '{filepath}")
+            print(f"Estado salvo com sucesso em {filepath}")
         except Exception as e:
             print(f"Erro ao gravar dados: {e}")
             
@@ -278,9 +284,10 @@ class MediaPlayer:
                     
             self.history.clear()
             for item in data["history"]:
-                if item[track_id] in self.library:
-                    self.history.append({"track": self.library[track_id], "timestamp": item["timestamp"] })
+                if item["track_id"] in self.library:
+                    self.history.append({"track": self.library[item["track_id"]], "timestamp": item["timestamp"] })
                     
+            print(f"Estado obtido com sucesso em {filepath}")
         except FileNotFoundError:
             print(f"Erro: o arquivo {filepath} não foi encontrado.")
         except Exception as e:

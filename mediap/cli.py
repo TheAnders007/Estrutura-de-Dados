@@ -8,7 +8,7 @@ class Cli:
     def help(self):
         print("""
         Comandos Disponíveis
-            library load <arquivo> —carrega a biblioteca a partir de CSV ou JSON;
+            library load <arquivo> —carrega a biblioteca a partir de um JSON;
             library list [--by rating|title|artist] — lista as faixas, ordenando pelo critério informado (default: id);
             playlist new <nome> —cria uma nova playlist vazia e a torna a "atual";
             playlist add <track_id> - adiciona a faixa ao final da playlist atual;
@@ -84,9 +84,9 @@ class Cli:
                         
                 elif subcommand == "remove":
                     if len(parts) == 2:   
-                        print("O id da faixa a ser removida não foi informado.")
+                        print("A posição da faixa a ser removida não foi informado.")
                     elif not parts[2].isdigit():
-                        print("O id da faixa precisa ser um número inteiro.")
+                        print("A posição da faixa precisa ser um número inteiro.")
                     else:
                         self.player.playlist_remove(int(parts[2]))
                 
@@ -110,7 +110,7 @@ class Cli:
             
             elif command == "queue":
                 if len(parts) == 2 and parts[1] == 'show':
-                    self.player.show_queue
+                    self.player.show_queue()
                 else:
                     print("Comando errado/incompleto. Utilize 'queue show'.")
                     
@@ -136,6 +136,9 @@ class Cli:
                 else:
                     self.player.load(parts[1])
                     
+            else:
+                print("Comando não reconhecido.")
+                
             return True
             
         except ValueError as e:

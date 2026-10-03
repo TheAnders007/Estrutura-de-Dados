@@ -1,0 +1,82 @@
+[
+  {
+    "id": 1,
+    "title": "Minto pra quem perguntar",
+    "artist": "ANAVITÓRIA",
+    "duration": 188,
+    "rating": 5,
+    "data_adicao": "2025-02-10"
+  },
+  {
+    "id": 2,
+    "title": "Fases",
+    "artist": "Tim Bernardes",
+    "duration": 259,
+    "rating": 5,
+    "data_adicao": "2025-02-12"
+  },
+  {
+    "id": 3,
+    "title": "Honeybee",
+    "artist": "Olivia Rodrigo",
+    "duration": 225,
+    "rating": 4,
+    "data_adicao": "2025-02-14"
+  },
+  {
+    "id": 4,
+    "title": "Me Ajude a Salvar os Domingos",
+    "artist": "Liniker",
+    "duration": 444,
+    "rating": 5,
+    "data_adicao": "2025-02-16"
+  },
+  {
+    "id": 5,
+    "title": "The Grudge",
+    "artist": "Olivia Rodrigo",
+    "duration": 190,
+    "rating": 4,
+    "data_adicao": "2025-02-18"
+  },
+  {
+    "id": 6,
+    "title": "Smokin Out The Window",
+    "artist": "Bruno Mars",
+    "duration": 201,
+    "rating": 4,
+    "data_adicao": "2025-02-20"
+  },
+  {
+    "id": 7,
+    "title": "Doce Futuro",
+    "artist": "ANAVITÓRIA",
+    "duration": 287,
+    "rating": 3,
+    "data_adicao": "2025-02-22"
+  },
+  {
+    "id": 8,
+    "title": "Beleza Eterna",
+    "artist": "Tim Bernardes",
+    "duration": 330,
+    "rating": 5,
+    "data_adicao": "2025-02-24"
+  },
+  {
+    "id": 9,
+    "title": "Uptown Funk",
+    "artist": "Bruno Mars",
+    "duration": 245,
+    "rating": 3,
+    "data_adicao": "2025-02-26"
+  },
+  {
+    "id": 10,
+    "title": "Tudo",
+    "artist": "Liniker",
+    "duration": 219,
+    "rating": 4,
+    "data_adicao": "2025-02-28"
+  }
+]

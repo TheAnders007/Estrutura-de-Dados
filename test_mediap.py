@@ -117,7 +117,7 @@ class TestePlaylist(unittest.TestCase):
         self.assertEqual(self.player.current_track.id, 1)
         
         self.player.playlist_remove(4)
-        self.player.playlist_remove(0)
+        self.player.playlist_remove(1)
         self.assertEqual(self.player.current_track.id, 2)
         
         self.player.prev()
@@ -211,7 +211,7 @@ class TestePlaylist(unittest.TestCase):
         
         cli.process_cmd("library")
         cli.process_cmd("library load")
-        cli.process_cmd("library load mediap/library_exemplo.json")
+        cli.process_cmd("library load library.json")
         cli.process_cmd("library list")
         cli.process_cmd("library list --by rating")
         
@@ -246,6 +246,7 @@ class TestePlaylist(unittest.TestCase):
         cli.process_cmd("save teste_save_and_load.json")
         cli.process_cmd("load")
         cli.process_cmd("load teste_save_and_load.json")
+        
         
 if __name__ == '__main__':
     unittest.main()
